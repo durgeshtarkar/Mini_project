@@ -98,7 +98,9 @@ def generate_pdf(predicted_class, confidence, filename):
     advice = precautions.get(predicted_class, "Consult a specialist for further evaluation.")
     pdf.multi_cell(0, 10, txt=f"Precautionary Advice:\n{advice}")
 
-    pdf_path = os.path.join(app.config['UPLOAD_FOLDER'], f"{filename}_report.pdf")
+    # ✅ Strip extension for clean filename
+    base_name = os.path.splitext(filename)[0]
+    pdf_path = os.path.join(app.config['UPLOAD_FOLDER'], f"{base_name}_report.pdf")
     pdf.output(pdf_path)
     return pdf_path
 
@@ -176,7 +178,7 @@ def detector():
                                    predicted_class=predicted_class.replace('_', ' ').title(),
                                    confidence=confidence,
                                    image_url=url_for('static', filename='uploads/' + filename),
-                                   pdf_url=url_for('static', filename='uploads/' + f"{filename}_report.pdf"))
+                                   pdf_url=url_for('static', filename='uploads/' + os.path.basename(pdf_path)))
 
     return render_template('detector.html')
 
@@ -186,4 +188,5 @@ if __name__ == '__main__':
         db.create_all()
     port = int(os.environ.get("PORT", 5000))  # Render expects PORT env
     app.run(host="0.0.0.0", port=port, debug=False)
+
 
