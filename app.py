@@ -12,7 +12,7 @@ import tensorflow as tf
 
 # --- Initialization ---
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Replace with a secure key
+app.secret_key = os.environ.get("SECRET_KEY", "your_secret_key")  # secure key from env
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['UPLOAD_FOLDER'] = 'static/uploads/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
@@ -34,16 +34,26 @@ class User(UserMixin, db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# --- Load Model ---
-try:
-    MODEL_PATH = 'model/my_model.h5'
-    model = tf.keras.models.load_model(MODEL_PATH)
-    print("✅ Model loaded successfully.")
-except Exception as e:
-    print(f"❌ Error loading model: {e}")
-    model = None
-
+# --- Lazy Model Loading ---
+model = None
+MODEL_PATH = 'model/my_model.h5'
 CLASS_NAMES = ['cataract', 'diabetic_retinopathy', 'glaucoma', 'normal']
+
+def get_model():
+    global model
+    if model is None:
+        try:
+            from keras.losses import SparseCategoricalCrossentropy
+            model = tf.keras.models.load_model(
+                MODEL_PATH,
+                custom_objects={"SparseCategoricalCrossentropy": SparseCategoricalCrossentropy()},
+                compile=False
+            )
+            print("✅ Model loaded successfully.")
+        except Exception as e:
+            print(f"❌ Error loading model: {e}")
+            model = None
+    return model
 
 # --- Helper Functions ---
 def allowed_file(filename):
@@ -57,10 +67,11 @@ def preprocess_image_for_prediction(image_bytes):
     return img_array
 
 def predict_disease(image_bytes):
-    if model is None:
+    mdl = get_model()
+    if mdl is None:
         return "Error", "Model not loaded. Please check the server logs."
     processed_image = preprocess_image_for_prediction(image_bytes)
-    predictions = model.predict(processed_image)
+    predictions = mdl.predict(processed_image)
     predicted_class_index = np.argmax(predictions[0])
     predicted_class = CLASS_NAMES[predicted_class_index]
     confidence = round(100 * np.max(predictions[0]), 2)
@@ -173,4 +184,6 @@ def detector():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Render expects PORT env
+    app.run(host="0.0.0.0", port=port, debug=False)
+
