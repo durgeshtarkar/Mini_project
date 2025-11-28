@@ -1,0 +1,68 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg" font-family="Poppins, sans-serif">
+  <!-- Chart Background -->
+  <rect width="100%" height="100%" fill="#f8f9fa"/>
+  
+  <!-- Axes and Grid Lines -->
+  <g stroke="#d1d5db" stroke-width="1">
+    <!-- Y-axis lines -->
+    <line x1="50" y1="250" x2="380" y2="250" /> <!-- 0.2 -->
+    <line x1="50" y1="200" x2="380" y2="200" /> <!-- 0.4 -->
+    <line x1="50" y1="150" x2="380" y2="150" /> <!-- 0.6 -->
+    <line x1="50" y1="100" x2="380" y2="100" /> <!-- 0.8 -->
+    <line x1="50" y1="50" x2="380" y2="50" /> <!-- 1.0 -->
+    <!-- X-axis line -->
+    <line x1="50" y1="50" x2="50" y2="250" />
+  </g>
+  
+  <!-- Y-axis Labels -->
+  <g font-size="10" fill="#6c757d" text-anchor="end">
+    <text x="40" y="255">0.2</text>
+    <text x="40" y="205">0.4</text>
+    <text x="40" y="155">0.6</text>
+    <text x="40" y="105">0.8</text>
+    <text x="40" y="55">1.0</text>
+    <text transform="rotate(-90)" x="-150" y="15" font-size="12" text-anchor="middle">Accuracy</text>
+  </g>
+  
+  <!-- X-axis Labels -->
+  <g font-size="10" fill="#6c757d" text-anchor="middle">
+    <text x="50" y="270">0</text>
+    <text x="116" y="270">1</text>
+    <text x="182" y="270">2</text>
+    <text x="248" y="270">3</text>
+    <text x="314" y="270">4</text>
+    <text x="380" y="270">5</text>
+    <text x="215" y="290" font-size="12">Epoch</text>
+  </g>
+  
+  <!-- Data Points: Training Accuracy (blue) -->
+  <!-- Data: [0.34, 0.52, 0.64, 0.69, 0.73, 0.79] -->
+  <polyline fill="none" stroke="#007bff" stroke-width="2" points="
+    50,215
+    116,170
+    182,140
+    248,127.5
+    314,117.5
+    380,102.5
+  "/>
+  
+  <!-- Data Points: Validation Accuracy (green) -->
+  <!-- Data: [0.51, 0.67, 0.71, 0.77, 0.80, 0.77] -->
+  <polyline fill="none" stroke="#28a745" stroke-width="2" points="
+    50,172.5
+    116,132.5
+    182,122.5
+    248,107.5
+    314,100
+    380,107.5
+  "/>
+  
+  <!-- Legend -->
+  <g font-size="10" transform="translate(250, 60)">
+    <rect x="0" y="0" width="120" height="40" fill="rgba(255,255,255,0.8)"/>
+    <circle cx="10" cy="10" r="4" fill="#007bff"/>
+    <text x="20" y="14">Training Accuracy</text>
+    <circle cx="10" cy="30" r="4" fill="#28a745"/>
+    <text x="20" y="34">Validation Accuracy</text>
+  </g>
+</svg>

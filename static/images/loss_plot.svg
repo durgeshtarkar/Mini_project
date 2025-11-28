@@ -1,0 +1,69 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg" font-family="Poppins, sans-serif">
+  <!-- Chart Background -->
+  <rect width="100%" height="100%" fill="#f8f9fa"/>
+  
+  <!-- Axes and Grid Lines -->
+  <g stroke="#d1d5db" stroke-width="1">
+    <!-- Y-axis lines -->
+    <line x1="50" y1="250" x2="380" y2="250" /> <!-- 0.2 -->
+    <line x1="50" y1="208.3" x2="380" y2="208.3" /> <!-- 0.5 -->
+    <line x1="50" y1="166.6" x2="380" y2="166.6" /> <!-- 0.8 -->
+    <line x1="50" y1="125" x2="380" y2="125" /> <!-- 1.1 -->
+    <line x1="50" y1="83.3" x2="380" y2="83.3" /> <!-- 1.4 -->
+    <line x1="50" y1="50" x2="380" y2="50" />
+    <!-- X-axis line -->
+    <line x1="50" y1="50" x2="50" y2="250" />
+  </g>
+  
+  <!-- Y-axis Labels -->
+  <g font-size="10" fill="#6c757d" text-anchor="end">
+    <text x="40" y="255">0.2</text>
+    <text x="40" y="213.3">0.5</text>
+    <text x="40" y="171.6">0.8</text>
+    <text x="40" y="130">1.1</text>
+    <text x="40" y="88.3">1.4</text>
+    <text transform="rotate(-90)" x="-150" y="15" font-size="12" text-anchor="middle">Loss</text>
+  </g>
+  
+  <!-- X-axis Labels -->
+  <g font-size="10" fill="#6c757d" text-anchor="middle">
+    <text x="50" y="270">0</text>
+    <text x="116" y="270">1</text>
+    <text x="182" y="270">2</text>
+    <text x="248" y="270">3</text>
+    <text x="314" y="270">4</text>
+    <text x="380" y="270">5</text>
+    <text x="215" y="290" font-size="12">Epoch</text>
+  </g>
+  
+  <!-- Data Points: Training Loss (red) -->
+  <!-- Data: [1.32, 1.01, 0.87, 0.71, 0.62, 0.53] -->
+  <polyline fill="none" stroke="#dc3545" stroke-width="2" points="
+    50,90
+    116,131.25
+    182,150
+    248,173.75
+    314,190
+    380,203.75
+  "/>
+  
+  <!-- Data Points: Validation Loss (orange) -->
+  <!-- Data: [1.03, 0.77, 0.70, 0.53, 0.54, 0.52] -->
+  <polyline fill="none" stroke="#fd7e14" stroke-width="2" points="
+    50,128.75
+    116,166.25
+    182,175
+    248,203.75
+    314,202.5
+    380,205
+  "/>
+  
+  <!-- Legend -->
+  <g font-size="10" transform="translate(250, 60)">
+    <rect x="0" y="0" width="120" height="40" fill="rgba(255,255,255,0.8)"/>
+    <circle cx="10" cy="10" r="4" fill="#dc3545"/>
+    <text x="20" y="14">Training Loss</text>
+    <circle cx="10" cy="30" r="4" fill="#fd7e14"/>
+    <text x="20" y="34">Validation Loss</text>
+  </g>
+</svg>

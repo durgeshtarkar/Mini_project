@@ -1,0 +1,27 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#007bff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#17a2b8;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Background elements -->
+  <rect x="0" y="0" width="400" height="300" fill="#f8f9fa" rx="10"/>
+  <circle cx="50" cy="50" r="30" fill="#e9f3ff" />
+  <circle cx="350" cy="250" r="40" fill="#e9f3ff" />
+  
+  <!-- Central Eye Element -->
+  <g transform="translate(200, 150) scale(1.2)">
+    <path d="M -90,0 C -50,-60 50,-60 90,0 C 50,60 -50,60 -90,0 Z" fill="url(#grad1)" stroke="#fff" stroke-width="4"/>
+    <circle cx="0" cy="0" r="40" fill="#fff"/>
+    <circle cx="0" cy="0" r="20" fill="#343a40"/>
+    <circle cx="5" cy="-5" r="5" fill="#fff" opacity="0.8"/>
+  </g>
+  
+  <!-- Abstract analysis lines -->
+  <path d="M 80 150 C 120 120, 150 120, 160 150" stroke="#007bff" stroke-width="2" fill="none" stroke-dasharray="4 4" />
+  <path d="M 240 150 C 250 180, 280 180, 320 150" stroke="#28a745" stroke-width="2" fill="none" stroke-dasharray="4 4" />
+  <path d="M 170 90 C 190 70, 210 70, 230 90" stroke="#6c757d" stroke-width="2" fill="none" stroke-dasharray="3 3" />
+  <circle cx="80" cy="150" r="4" fill="#007bff" />
+  <circle cx="320" cy="150" r="4" fill="#28a745" />
+</svg>

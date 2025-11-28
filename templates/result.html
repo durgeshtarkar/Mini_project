@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EyeIntel - Detection Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Animated Background Canvas -->
+    <canvas id="canvas" class="background-canvas"></canvas>
+    
+    <!-- Gradient Overlay for depth -->
+    <div class="gradient-overlay"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"></path>
+                    </svg>
+                </div>
+                <span class="logo-text">EyeIntel</span>
+            </div>
+            
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+                <a href="{{ url_for('detector') }}" class="nav-link">Detector</a>
+            </div>
+
+            <!-- Mobile menu button -->
+            <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Results Section -->
+    <section class="results-section">
+        <div class="results-container">
+            <!-- Header with Success Animation -->
+            <div class="results-header">
+                <div class="success-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22,4 12,14.01 9,11.01"></polyline>
+                    </svg>
+                </div>
+                <div class="results-badge">
+                    <span class="badge-icon">✅</span>
+                    <span>Analysis Complete</span>
+                </div>
+                <h1 class="results-title">Detection Results</h1>
+                <p class="results-subtitle">
+                    Our AI has analyzed your retinal scan. Here are the detailed results with confidence metrics.
+                </p>
+            </div>
+
+            <!-- Results Content -->
+            <div class="results-content">
+                <!-- Image Section -->
+                <div class="result-image-section">
+                    <div class="image-container">
+                        <div class="image-header">
+                            <h3>Analyzed Scan</h3>
+                            <div class="scan-info">
+                                <span class="info-item">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                        <circle cx="9" cy="9" r="2"/>
+                                        <path d="M21 15l-3.086-3.086a2 2 0 00-2.828 0L6 21"/>
+                                    </svg>
+                                    High Resolution
+                                </span>
+                            </div>
+                        </div>
+                        <div class="result-image-wrapper">
+                            <img src="{{ image_url }}" alt="Uploaded Eye Scan" class="result-image">
+                            <div class="image-overlay">
+                                <div class="processing-indicator">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m1.636 6.364l.707-.707M6 10a2 2 0 110-4m6 4a2 2 0 110-4m6 4a2 2 0 110-4"/>
+                                    </svg>
+                                    <span>AI Processed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Analysis Results Section -->
+                <div class="result-details-section">
+                    <div class="analysis-card">
+                        <div class="card-header">
+                            <h3>AI Analysis Results</h3>
+                            <div class="analysis-timestamp">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12,6 12,12 16,14"/>
+                                </svg>
+                                <span>Just now</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Prediction Result -->
+                        <div class="prediction-section">
+                            <div class="result-item">
+                                <label class="result-label">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    Predicted Condition
+                                </label>
+                                <div class="prediction-result">
+                                    <div class="condition-badge prediction-{{ predicted_class.lower().replace(' ', '-') }}">
+                                        <span class="condition-name">{{ predicted_class }}</span>
+                                        {% if predicted_class.lower() == 'normal' %}
+                                            <span class="condition-icon">✅</span>
+                                        {% elif predicted_class.lower() == 'cataract' %}
+                                            <span class="condition-icon">⚠</span>
+                                        {% elif predicted_class.lower() == 'glaucoma' %}
+                                            <span class="condition-icon">🔴</span>
+                                        {% else %}
+                                            <span class="condition-icon">🩸</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Confidence Score -->
+                            <div class="result-item">
+                                <label class="result-label">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                                    </svg>
+                                    Confidence Level
+                                </label>
+                                <div class="confidence-section">
+                                    <div class="confidence-display">
+                                        <span class="confidence-value">{{ confidence }}%</span>
+                                        <span class="confidence-label">Accuracy</span>
+                                    </div>
+                                    <div class="confidence-bar-container">
+                                        <div class="confidence-bar">
+                                            <div class="confidence-fill" 
+                                                 style="width: {{ confidence }}%"
+                                                 data-confidence="{{ confidence }}">
+                                            </div>
+                                        </div>
+                                        <div class="confidence-markers">
+                                            <span class="marker" style="left: 25%">25%</span>
+                                            <span class="marker" style="left: 50%">50%</span>
+                                            <span class="marker" style="left: 75%">75%</span>
+                                            <span class="marker" style="left: 100%">100%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Medical Disclaimer -->
+                        <div class="disclaimer-section">
+                            <div class="disclaimer-card">
+                                <div class="disclaimer-header">
+                                    <div class="disclaimer-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="10"/>
+                                            <line x1="12" y1="8" x2="12" y2="12"/>
+                                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                                        </svg>
+                                    </div>
+                                    <h4>Important Medical Disclaimer</h4>
+                                </div>
+                                <div class="disclaimer-content">
+                                    <p>
+                                        This is an <strong>AI-generated prediction</strong> and not a substitute for professional medical diagnosis. 
+                                        Please consult a qualified ophthalmologist or healthcare provider for proper medical evaluation and treatment recommendations.
+                                    </p>
+                                    <div class="disclaimer-points">
+                                        <div class="point">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="m9 12 2 2 4-4"/>
+                                            </svg>
+                                            <span>AI assistance for screening purposes only</span>
+                                        </div>
+                                        <div class="point">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="m9 12 2 2 4-4"/>
+                                            </svg>
+                                            <span>Professional medical consultation recommended</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>
+                            <a href="{{ pdf_url }}" download
+                            style="display:inline-block; padding:10px 20px; background-color:#28a745; color:white; text-decoration:none; border-radius:6px; font-weight:bold; box-shadow:0 2px 5px rgba(0,0,0,0.2);">
+                            📄 Download PDF Report
+                            </a>
+                        </p>
+
+                        
+                        <!-- Action Buttons -->
+                        <div class="result-actions">
+                            <a href="{{ url_for('detector') }}" class="btn btn-primary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7,10 12,15 17,10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                Analyze Another Scan
+                            </a>
+                            <a href="{{ url_for('home') }}" class="btn btn-secondary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                    <polyline points="9,22 9,12 15,12 15,22"/>
+                                </svg>
+                                Back to Home
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <div class="logo-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"></path>
+                            </svg>
+                        </div>
+                        <span>EyeIntel</span>
+                    </div>
+                    <p>AI-Powered Eye Disease Detection</p>
+                </div>
+                
+                <div class="footer-info">
+                    <div class="footer-section">
+                        <h4>Developers</h4>
+                        <p>Created by</p>
+                        <p><strong>Durgesh </strong></p>
+                        <p><strong>Deepika</strong></p>
+                        <p><strong>Boby </strong></p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 EyeIntel. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        // Animate confidence bar on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const confidenceFill = document.querySelector('.confidence-fill');
+            if (confidenceFill) {
+                setTimeout(() => {
+                    confidenceFill.style.transition = 'width 2s ease-out';
+                    confidenceFill.style.width = confidenceFill.dataset.confidence + '%';
+                }, 500);
+            }
+        });
+    </script>
+</body>
+</html>

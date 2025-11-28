@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EyeIntel - Eye Disease Detector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Animated Background Canvas -->
+    <canvas id="canvas" class="background-canvas"></canvas>
+    
+    <!-- Gradient Overlay for depth -->
+    <div class="gradient-overlay"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"></path>
+                    </svg>
+                </div>
+                <span class="logo-text">EyeIntel</span>
+            </div>
+            
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+                <a href="{{ url_for('detector') }}" class="nav-link active">Detector</a>
+                <form action="{{ url_for('logout') }}" method="get" style="display:inline;">
+                    <button type="submit" class="nav-link logout-btn" style="background:none; border:none; color:#fff; font-weight:500; cursor:pointer;">Logout</button>
+                </form>
+            </div>
+
+            <!-- Mobile menu button -->
+            <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Detector Section -->
+    <section class="detector-section">
+        <div class="detector-container">
+            <!-- Header -->
+            <div class="detector-header">
+                <div class="detector-badge">
+                    <span class="badge-icon">🔬</span>
+                    <span>AI-Powered Analysis</span>
+                </div>
+                <h1 class="detector-title">Eye Disease Detection Tool</h1>
+                <p class="detector-subtitle">
+                    Upload a high-quality fundus or retinal scan image for instant AI-powered analysis. 
+                    Our system supports JPG, JPEG, and PNG formats up to 10MB.
+                </p>
+            </div>
+
+            <!-- Upload Form -->
+            <form id="upload-form" action="{{ url_for('detector') }}" method="post" enctype="multipart/form-data" class="upload-form">
+                <!-- Upload Area -->
+                <div class="upload-area" id="upload-area">
+                    <div class="upload-content">
+                        <div class="upload-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7,10 12,15 17,10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                        </div>
+                        <h3 class="upload-title">Drop your image here</h3>
+                        <p class="upload-text">or click to browse files</p>
+                        <div class="upload-formats">
+                            <span class="format-tag">JPG</span>
+                            <span class="format-tag">JPEG</span>
+                            <span class="format-tag">PNG</span>
+                        </div>
+                        <input type="file" name="file" id="file-input" accept="image/png, image/jpeg, image/jpg" hidden>
+                        <button type="button" id="select-image-btn" class="btn btn-outline">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7,10 12,15 17,10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            Select Image
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Image Preview Container -->
+                <div id="image-preview-container" class="image-preview-container" style="display: none;">
+                    <div class="preview-card">
+                        <div class="preview-image-wrapper">
+                            <img id="image-preview" src="#" alt="Image Preview">
+                            <div class="image-overlay">
+                                <button type="button" onclick="removeImage()" class="remove-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="preview-info">
+                            <div class="file-details">
+                                <h4 id="filename-display" class="filename">Selected Image</h4>
+                                <p class="file-status">Ready for analysis</p>
+                            </div>
+                            <div class="file-actions">
+                                <button type="button" onclick="removeImage()" class="btn btn-outline btn-small">
+                                    Change Image
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Analyze Button -->
+                <div class="analyze-section">
+                    <button type="submit" id="process-image-btn" class="btn btn-primary btn-large analyze-btn" disabled>
+                        <span class="btn-text">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m1.636 6.364l.707-.707M6 10a2 2 0 110-4m6 4a2 2 0 110-4m6 4a2 2 0 110-4"/>
+                            </svg>
+                            Analyze Image
+                        </span>
+                        <div class="loading-spinner" style="display: none;">
+                            <div class="spinner"></div>
+                            <span>Processing...</span>
+                        </div>
+                    </button>
+                    
+                    <!-- Analysis Info -->
+                    <div class="analysis-info">
+                        <div class="info-item">
+                            <span class="info-icon">⚡</span>
+                            <span>Analysis takes 2-3 seconds</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-icon">🎯</span>
+                            <span>89.90% accuracy rate</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-icon">🔒</span>
+                            <span>Your data is secure</span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <div class="logo-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"></path>
+                            </svg>
+                        </div>
+                        <span>EyeIntel</span>
+                    </div>
+                    <p>AI-Powered Eye Disease Detection</p>
+                </div>
+                
+                <div class="footer-info">
+                    <div class="footer-section">
+                                               <h4>Developers</h4>
+                        <p>Created by</p>
+                        <p><strong>Durgesh</strong></p>
+                        <p><strong>Deepika</strong></p>
+                        <p><strong>Boby</strong></p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 EyeIntel. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/detector.js') }}"></script>
+</body>
+</html>
+

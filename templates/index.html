@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EyeIntel - AI-Powered Eye Disease Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Animated Background Canvas -->
+    <canvas id="canvas" class="background-canvas"></canvas>
+    
+    <!-- Gradient Overlay for depth -->
+    <div class="gradient-overlay"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"></path>
+                    </svg>
+                </div>
+                <span class="logo-text"> EyeIntel </span>
+            </div>
+            
+            <div class="nav-links">
+                <button onclick="scrollToSection('hero')" class="nav-link active">Home</button>
+                <button onclick="scrollToSection('about')" class="nav-link">About</button>
+                <button onclick="scrollToSection('how-it-works')" class="nav-link">Process</button>
+                <button onclick="scrollToSection('model-performance')" class="nav-link">Performance</button>
+                <a href="{{ url_for('detector') }}" class="nav-cta">Try Now</a>
+            </div>
+
+            <!-- Mobile menu button -->
+            <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <div id="mobile-nav" class="mobile-nav">
+            <button onclick="scrollToSection('hero')" class="mobile-nav-link">Home</button>
+            <button onclick="scrollToSection('about')" class="mobile-nav-link">About</button>
+            <button onclick="scrollToSection('how-it-works')" class="mobile-nav-link">Process</button>
+            <button onclick="scrollToSection('model-performance')" class="mobile-nav-link">Performance</button>
+            <a href="{{ url_for('detector') }}" class="mobile-nav-cta">Try Now</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section">
+        <div class="hero-container">
+            <div class="hero-badge">
+                <span class="badge-icon">✨</span>
+                <span>AI-Powered Medical Analysis</span>
+            </div>
+            
+            <h1 class="hero-title">
+                <span class="title-main">EyeIntel</span>
+                <span class="title-sub">Advanced Eye Disease Detection</span>
+            </h1>
+            
+            <p class="hero-description">
+                Harness the power of cutting-edge Convolutional Neural Networks to detect eye diseases 
+                from fundus and retinal scans with <strong>89.90% accuracy</strong>. 
+                Early detection saves vision.
+            </p>
+
+            <!-- Stats Row -->
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-number">89.90%</div>
+                    <div class="stat-label">Accuracy</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Diseases Detected</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">256×256</div>
+                    <div class="stat-label">Image Resolution</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">Instant</div>
+                    <div class="stat-label">Results</div>
+                </div>
+            </div>
+
+            <!-- CTA Buttons -->
+            <div class="hero-cta">
+                <a href="{{ url_for('detector') }}" class="btn btn-primary pulse-animation">
+                    <span class="btn-text">Start Detection</span>
+                    <span class="btn-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m9 18 6-6-6-6"/>
+                        </svg>
+                    </span>
+                </a>
+                <button onclick="scrollToSection('about')" class="btn btn-secondary">
+                    <span class="btn-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="m9 12 2 2 4-4"/>
+                        </svg>
+                    </span>
+                    <span class="btn-text">Learn More</span>
+                </button>
+            </div>
+
+            <!-- Feature Highlights -->
+            <div class="feature-highlights">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m1.636 6.364l.707-.707M6 10a2 2 0 110-4m6 4a2 2 0 110-4m6 4a2 2 0 110-4"/>
+                        </svg>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Deep Learning</h3>
+                        <p>Advanced CNN architecture</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                        </svg>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Lightning Fast</h3>
+                        <p>Instant analysis results</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div class="feature-content">
+                        <h3>High Accuracy</h3>
+                        <p>89.90% validation accuracy</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="content-section">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-badge">
+                    <span>Medical Conditions</span>
+                </div>
+                <h2 class="section-title">Diseases We Detect</h2>
+                <p class="section-description">
+                    Our AI system can accurately identify and classify four major eye conditions 
+                    that affect millions worldwide, enabling early intervention and treatment.
+                </p>
+            </div>
+
+            <div class="disease-grid">
+                <div class="disease-card normal-card">
+                    <div class="card-header">
+                        <div class="disease-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"/>
+                            </svg>
+                        </div>
+                        <div class="status-indicator normal"></div>
+                    </div>
+                    <div class="card-content">
+                        <h3>Normal Eye</h3>
+                        <p>Healthy retina with clear vision, normal eye pressure, and no signs of disease. Regular monitoring helps maintain optimal eye health.</p>
+                        <div class="card-stats">
+                            <div class="stat">
+                                <span class="stat-label">Detection Rate</span>
+                                <span class="stat-value">95%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="disease-card cataract-card">
+                    <div class="card-header">
+                        <div class="disease-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                            </svg>
+                        </div>
+                        <div class="status-indicator warning"></div>
+                    </div>
+                    <div class="card-content">
+                        <h3>Cataract</h3>
+                        <p>Clouding of the eye's natural lens, causing blurred vision and light sensitivity. Most common cause of blindness, but treatable with surgery.</p>
+                        <div class="card-stats">
+                            <div class="stat">
+                                <span class="stat-label">Global Cases</span>
+                                <span class="stat-value">95M+</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="disease-card glaucoma-card">
+                    <div class="card-header">
+                        <div class="disease-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 9V5a3 3 0 0 0-6 0v4"/>
+                                <rect x="2" y="9" width="20" height="11" rx="2" ry="2"/>
+                            </svg>
+                        </div>
+                        <div class="status-indicator danger"></div>
+                    </div>
+                    <div class="card-content">
+                        <h3>Glaucoma</h3>
+                        <p>Progressive optic nerve damage often caused by high eye pressure. Known as the "silent thief of sight" due to gradual vision loss.</p>
+                        <div class="card-stats">
+                            <div class="stat">
+                                <span class="stat-label">Risk Factor</span>
+                                <span class="stat-value">High</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="disease-card diabetic-card">
+                    <div class="card-header">
+                        <div class="disease-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                            </svg>
+                        </div>
+                        <div class="status-indicator critical"></div>
+                    </div>
+                    <div class="card-content">
+                        <h3>Diabetic Retinopathy</h3>
+                        <p>Diabetes-related blood vessel damage in the retina. Leading cause of blindness in working-age adults, but preventable with early detection.</p>
+                        <div class="card-stats">
+                            <div class="stat">
+                                <span class="stat-label">Diabetic Risk</span>
+                                <span class="stat-value">30%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="content-section">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-badge">
+                    <span>AI Process</span>
+                </div>
+                <h2 class="section-title">How Detection Works</h2>
+                <p class="section-description">
+                    Our advanced AI system processes your retinal scans through multiple stages 
+                    to provide accurate, reliable results in seconds.
+                </p>
+            </div>
+
+            <div class="process-flow">
+                <div class="process-step">
+                    <div class="step-indicator">
+                        <div class="step-number">01</div>
+                        <div class="step-line"></div>
+                    </div>
+                    <div class="step-content">
+                        <div class="step-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <circle cx="9" cy="9" r="2"/>
+                                <path d="M21 15l-3.086-3.086a2 2 0 00-2.828 0L6 21"/>
+                            </svg>
+                        </div>
+                        <h3>Upload Scan</h3>
+                        <p>Upload high-quality fundus or retinal scan images in JPG, JPEG, or PNG format. Our system accepts images up to 10MB.</p>
+                        <div class="step-features">
+                            <span class="feature-tag">Drag & Drop</span>
+                            <span class="feature-tag">Multiple Formats</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="process-step">
+                    <div class="step-indicator">
+                        <div class="step-number">02</div>
+                        <div class="step-line"></div>
+                    </div>
+                    <div class="step-content">
+                        <div class="step-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                            </svg>
+                        </div>
+                        <h3>Preprocessing</h3>
+                        <p>Automatic image enhancement, noise reduction, and resizing to 256×256 pixels optimized for our neural network architecture.</p>
+                        <div class="step-features">
+                            <span class="feature-tag">Auto-Enhance</span>
+                            <span class="feature-tag">Noise Reduction</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="process-step">
+                    <div class="step-indicator">
+                        <div class="step-number">03</div>
+                        <div class="step-line"></div>
+                    </div>
+                    <div class="step-content">
+                        <div class="step-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m1.636 6.364l.707-.707M6 10a2 2 0 110-4m6 4a2 2 0 110-4m6 4a2 2 0 110-4"/>
+                            </svg>
+                        </div>
+                        <h3>AI Analysis</h3>
+                        <p>Deep Convolutional Neural Network with multiple layers analyzes image patterns and features to identify potential disease markers.</p>
+                        <div class="step-features">
+                            <span class="feature-tag">Deep Learning</span>
+                            <span class="feature-tag">Pattern Recognition</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="process-step">
+                    <div class="step-indicator">
+                        <div class="step-number">04</div>
+                    </div>
+                    <div class="step-content">
+                        <div class="step-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 11H1v12h8V11z"/>
+                                <path d="M20 11h-8v12h8V11z"/>
+                                <path d="M15 3v4M9 3v4"/>
+                            </svg>
+                        </div>
+                        <h3>Get Results</h3>
+                        <p>Receive detailed analysis with condition prediction, confidence score, and recommendations. Results include visual indicators and explanations.</p>
+                        <div class="step-features">
+                            <span class="feature-tag">Instant Results</span>
+                            <span class="feature-tag">Confidence Score</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Model Performance Section -->
+    <section id="model-performance" class="content-section">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-badge">
+                    <span>Technical Specs</span>
+                </div>
+                <h2 class="section-title">Model Performance</h2>
+                <p class="section-description">
+                    Built with state-of-the-art deep learning architecture, our model demonstrates 
+                    exceptional performance across all eye disease categories.
+                </p>
+            </div>
+
+            <div class="performance-grid">
+                <div class="performance-text">
+                    <div class="tech-specs">
+                        <h3>🧠 Advanced Neural Architecture</h3>
+                        <p>Our Convolutional Neural Network employs multiple convolutional layers, batch normalization, dropout regularization, and advanced pooling techniques for optimal feature extraction and classification.</p>
+                        
+                        <div class="specs-list">
+                            <div class="spec-group">
+                                <h4>Training Specifications</h4>
+                                <div class="spec-items">
+                                    <div class="spec-item">
+                                        <span class="spec-label">Epochs</span>
+                                        <span class="spec-value">6</span>
+                                    </div>
+                                    <div class="spec-item">
+                                        <span class="spec-label">Optimizer</span>
+                                        <span class="spec-value">Adam</span>
+                                    </div>
+                                    <div class="spec-item">
+                                        <span class="spec-label">Loss Function</span>
+                                        <span class="spec-value">Sparse Categorical Crossentropy</span>
+                                    </div>
+                                    <div class="spec-item">
+                                        <span class="spec-label">Input Resolution</span>
+                                        <span class="spec-value">256×256 pixels</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="performance-metrics">
+                            <h4>Key Achievements</h4>
+                            <div class="metrics-grid">
+                                <div class="metric-card">
+                                    <div class="metric-value">89.90%</div>
+                                    <div class="metric-label">Validation Accuracy</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-value">0.2915</div>
+                                    <div class="metric-label">Final Loss</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-value">1.2s</div>
+                                    <div class="metric-label">Avg Processing</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-value">90.89%</div>
+                                    <div class="metric-label">Training Accuracy</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="performance-visual">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>📈 Training Progress</h4>
+                            <p>Model performance across training epochs</p>
+                        </div>
+                        <div class="chart-content">
+                            <div class="chart-placeholder">
+                                <div class="chart-mock">
+                                    <div class="chart-bars">
+                                        <div class="bar" style="height: 45%"></div>
+                                        <div class="bar" style="height: 65%"></div>
+                                        <div class="bar" style="height: 75%"></div>
+                                        <div class="bar" style="height: 82%"></div>
+                                        <div class="bar" style="height: 85%"></div>
+                                        <div class="bar" style="height: 86%"></div>
+                                    </div>
+                                </div>
+                                <div class="chart-info">
+                                    <p>📊 <strong>Validation Accuracy:</strong> Steady improvement from 45% to 89.90%</p>
+                                    <p>📉 <strong>Loss Reduction:</strong> Consistent decrease indicating good convergence</p>
+                                    <p>⚡ <strong>Stable Training:</strong> No overfitting detected</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <div class="logo-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"></path>
+                            </svg>
+                        </div>
+                        <span>EyeIntel</span>
+                    </div>
+                    <p>AI-Powered Eye Disease Detection</p>
+                </div>
+                
+                <div class="footer-info">
+                    <div class="footer-section">
+                        <h4>Technology</h4>
+                        <ul>
+                            <li>Deep Learning</li>
+                            <li>Computer Vision</li>
+                            <li>Medical AI</li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Developers</h4>
+                        <p>Created by</p>
+                        <p><strong>Durgesh</strong></p>
+                        <p><strong>Deepika</strong></p>
+                        <p><strong>Boby</strong></p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 EyeIntel. All rights reserved. | Early detection saves vision.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
