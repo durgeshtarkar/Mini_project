@@ -10,11 +10,12 @@ seaborn==0.13.0
 kagglehub==0.1.5
 Flask==2.3.3
 Werkzeug==2.3.7
-Pillow==10.0.1
+Pillow==11.0.0
 Flask-Login==0.6.3
 Flask-SQLAlchemy==3.0.5
 fpdf==1.7.2
 gunicorn==21.2.0
+
 
 
 
