@@ -3,45 +3,4 @@ venv/
 env/
 tf-env/
 
-# Python cache and compiled files
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# Logs
-*.log
-
-# OS-specific files
-.DS_Store
-Thumbs.db
-
-# Jupyter notebook checkpoints
-.ipynb_checkpoints/
-
-# Model files
-# Ignore all model files except the main one
-*.h5
-!model/my_model.h5
-*.hdf5
-*.keras
-
-# Database files
-*.sqlite3
-*.db
-
-# Instance folder (if used for config or local DB)
-instance/
-
-# Build and distribution folders
-build/
-dist/
-*.egg-info/
-
-# IDE/editor settings
-.vscode/
-.idea/
-
-# PDF reports
-*.pdf
 
