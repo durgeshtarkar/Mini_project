@@ -1,4 +1,4 @@
-tensorflow==2.13.0
+tensorflow==2.12.0        # Compatible with Python 3.10 on Render
 numpy==1.24.4
 matplotlib==3.8.0
 scikit-learn==1.3.2
@@ -8,7 +8,8 @@ Flask==2.3.3
 Werkzeug==2.3.7
 Pillow==10.0.1
 Flask-Login==0.6.3
-flask-sqlalchemy
-fpdf
-gunicorn
+Flask-SQLAlchemy==3.0.5
+fpdf==1.7.2
+gunicorn==21.2.0
+
 
