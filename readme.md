@@ -35,6 +35,7 @@ It is a full-stack web application that uses deep learning to detect common eye 
 | Chatbot      | Hugging Face Transformers (DialoGPT)|
 | PDF Reports  | FPDF                                |
 | Database     | SQLite                              |
+| Deployment   | Gunicorn + Render                   |
 
 ---
 
@@ -69,6 +70,3 @@ Visit http://127.0.0.1:5000 to access the app.
    
 Go to the Detector page, upload a retinal scan, and view the prediction and downloadable PDF report.
 
-4. Use the chatbot
-   
-Click the 💬 icon to open the chatbot and ask questions about eye diseases, precautions, or app usage.
